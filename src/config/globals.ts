@@ -1,5 +1,5 @@
 export const globals = {
-  BACKEND_BASE_URL: "https://hugo-stanley.onrender.com:10000",
+  BACKEND_BASE_URL: "https://hugo-stanley.onrender.com",
   BE_ENDPOINTS: {
     NEW_USER: "/user/new"
   },
