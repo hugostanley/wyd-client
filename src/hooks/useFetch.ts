@@ -1,3 +1,4 @@
+
 import { AxiosResponse, AxiosError } from "axios";
 import { useState } from "react";
 import { mainInstance } from '../api/main'
@@ -19,7 +20,7 @@ export function useFetch<T>(method: Methods): UseFetchResult<T> {
   const [error, setError] = useState<AxiosError<T> | null>(null);
   const navigate = useNavigate()
 
-  async function fetch(url: string, body?: T, type?: string): Promise<void> {
+  async function fetch(url: string, body?: T): Promise<void> {
     const token = localStorage.getItem("secret_key")
     try {
       let response;
@@ -38,7 +39,7 @@ export function useFetch<T>(method: Methods): UseFetchResult<T> {
         });
       }
       setData(response);
-    } catch (error) {
+    } catch (error: any) {
       // this is to handle session expiration
       if (globals.RESPONSE_MESSAGES.AUTHENTICATION.includes(error.response.data.message)) {
         localStorage.removeItem("secret_key")
