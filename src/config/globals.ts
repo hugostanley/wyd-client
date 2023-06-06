@@ -1,5 +1,8 @@
+console.log(import.meta.env.VITE_BASE_URL);
+console.log(import.meta.env)
+
 export const globals = {
-  BACKEND_BASE_URL: "https://hugo-stanley.onrender.com",
+  BACKEND_BASE_URL: import.meta.env.VITE_BASE_URL,
   BE_ENDPOINTS: {
     NEW_USER: "/user/new"
   },
