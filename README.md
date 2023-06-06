@@ -8,6 +8,10 @@ A personal solution to kickstart a front end react app.
 - Tailwind
 - Vite
 - React router
+- Axios
+
+### Features / add ons
+1. Includes a custom useFetch hook for an easier management of API requests and states
 
 ### How to use
 1. Clone the repository and install dependencies with pnpm.
