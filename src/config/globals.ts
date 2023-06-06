@@ -1,6 +1,8 @@
 export const globals = {
-  BACKEND_BASE_URL: "http://localhost:4000",
-  BE_ENDPOINTS: {},
+  BACKEND_BASE_URL: "https://54.254.162.138:10000",
+  BE_ENDPOINTS: {
+    NEW_USER: "/user/new"
+  },
   FE_ENDPOINTS: {
     LOGIN: ""
   },
