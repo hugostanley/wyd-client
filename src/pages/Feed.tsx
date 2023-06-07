@@ -2,8 +2,14 @@ import { FormEvent, useEffect, useState } from "react"
 import { globals } from "../config/globals"
 import { useFetch } from "../hooks/useFetch"
 
+interface TodoItem {
+  status: string;
+  title: string;
+  description: string;
+}
+
 export default function Feed({ socket }: { socket: any }) {
-  const [todoList, setTodoList] = useState([])
+  const [todoList, setTodoList] = useState<TodoItem[]>([])
   const [newTodoState, setNewTodoState] = useState({
     title: "",
     description: "",
@@ -27,7 +33,7 @@ export default function Feed({ socket }: { socket: any }) {
     })
   }
 
-  function feedUpdater(list) {
+  function feedUpdater(list: TodoItem[]) {
     setTodoList(list)
   }
 
