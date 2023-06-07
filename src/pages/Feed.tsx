@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { globals } from "../config/globals"
 import { useFetch } from "../hooks/useFetch"
 
@@ -93,7 +93,9 @@ export default function Feed({ socket }: { socket: any }) {
               {isEditing !== null && isEditing._id === item._id ? (
                 <>
                   <form onSubmit={(e) => handleEditSubmit(e)} className="flex flex-col">
+                    {/* @ts-ignore */}
                     <input value={isEditing.title} className="font-bold text-xl" onChange={e => setIsEditing(state => ({ ...state, title: e.target.value }))} />
+                    {/* @ts-ignore */}
                     <textarea value={isEditing.description} onChange={(e) => setIsEditing(state => ({ ...state, description: e.target.value }))} />
                     <button type="submit">update</button>
                   </form>
