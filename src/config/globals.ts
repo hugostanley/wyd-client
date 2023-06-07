@@ -3,7 +3,9 @@ export const globals = {
   BE_ENDPOINTS: {
     NEW_USER: "/user/new",
     SIGNIN_USER: "/user/signin",
-    NEW_TODO: "/todo/new"
+    NEW_TODO: "/todo/new",
+    EDIT_TODO: "/todo/edit",
+    DELETE_TODO: "/todo/delete"
   },
   FE_ENDPOINTS: {
     LOGIN: "/login",
