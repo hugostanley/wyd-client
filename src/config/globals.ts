@@ -5,11 +5,18 @@ export const globals = {
     SIGNIN_USER: "/user/signin",
     NEW_TODO: "/todo/new",
     EDIT_TODO: "/todo/edit",
-    DELETE_TODO: "/todo/delete"
+    DELETE_TODO: "/todo/delete",
+    ALL_USERS: "/users",
+    ADD_FRIEND: "/friend/add",
+    ALL_FRIENDS: "/friends",
+    FRIEND_REQUESTS: "/friend/requests", 
+    INCOMING_REQUEST: "/friend/incoming",
+    ACCEPT_REQUEST: "/friend/accept"
   },
   FE_ENDPOINTS: {
     LOGIN: "/login",
     REGISTER: "/register",
+    FRIENDS: "/friends"
   },
   RESPONSE_MESSAGES: {
     AUTHENTICATION: ["Failed to authenticate", "Incorrect token given", "Authorization headers not found"]

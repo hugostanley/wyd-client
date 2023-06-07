@@ -7,6 +7,7 @@ import Authenticate from './components/Routes/Authenticate.tsx'
 import { globals } from './config/globals.ts'
 import Restrict from './components/Routes/Restricted.tsx'
 import Login from './pages/Login.tsx'
+import Friends from './pages/Friends.tsx'
 import Register from './pages/Register.tsx'
 import Feed from './pages/Feed.tsx'
 import { io } from 'socket.io-client'
@@ -35,8 +36,12 @@ const router = createBrowserRouter([
         index: true,
         element: <Authenticate component={<Feed socket={socket} />} />,
         loader: getIsLoggedIn
+      },
+      {
+        path: globals.FE_ENDPOINTS.FRIENDS,
+        element: <Authenticate component={<Friends />} />,
+        loader: getIsLoggedIn
       }
-
     ]
   }
 ])
