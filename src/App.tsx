@@ -1,25 +1,15 @@
-import { useEffect } from "react"
-import { useFetch } from "./hooks/useFetch"
-import { globals } from "./config/globals"
+import { Outlet, useLoaderData } from "react-router-dom"
 
 function App() {
-  const {data, fetch: smthn, error} = useFetch("post")
-
-  async function handleClick(){
-    console.log('clicked')
-    await smthn(globals.BE_ENDPOINTS.NEW_USER, {username: 'stanley', email: 'stanley@mail.com', password: 'stanleytest'})
-  }
-
-  useEffect(()=> {
-    if(data) console.log(data)
-    if(error) console.log(error)
-
-  },[data, error])
-
+  const data = useLoaderData()
   return (
     <>
-      <p className="text-2xl">hello</p>
-      <button onClick={handleClick}>click me</button>
+      {data && (
+        <div className="w-screen">
+          <h1 className="font-bold text-5xl">WYD</h1>
+        </div>
+      )}
+      <Outlet />
     </>
   )
 }
