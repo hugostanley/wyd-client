@@ -5,6 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 interface LoginReturnType {
   token: string;
+  user: {
+    email: string;
+    username: string;
+    _id: string;
+  };
 }
 
 export default function Login() {
@@ -19,7 +24,9 @@ export default function Login() {
 
   useEffect(() => {
     if (loginData && loginData.status === 200) {
+      const user = loginData.data.user
       const token = loginData.data.token
+      localStorage.setItem("user", JSON.stringify({ email: user.email, _id: user._id, username: user.username }))
       localStorage.setItem("secret_key", token)
       localStorage.setItem("isLoggedIn", "true")
       navigate("/")
