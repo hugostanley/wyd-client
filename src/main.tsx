@@ -39,7 +39,7 @@ const router = createBrowserRouter([
       },
       {
         path: globals.FE_ENDPOINTS.FRIENDS,
-        element: <Authenticate component={<Friends />} />,
+        element: <Authenticate component={<Friends socket={socket} />} />,
         loader: getIsLoggedIn
       }
     ]
