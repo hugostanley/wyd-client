@@ -7,6 +7,12 @@ interface TodoItem {
   status: string;
   title: string;
   description: string;
+  createdByUser: {
+    _id: string;
+    username: string;
+    email: string;
+  },
+  updatedAt: string;
 }
 
 export default function Feed({ socket }: { socket: any }) {
@@ -18,23 +24,38 @@ export default function Feed({ socket }: { socket: any }) {
     description: "",
     status: "inprogress"
   })
-  const { data: newTodoData, fetch: newTodo, error: newTodoError } = useFetch("post")
-  const { data: editData, fetch: editFetch, error: editError } = useFetch("post")
-  const { data: deleteData, fetch: deleteFetch, error: deleteError } = useFetch("post")
+  const { data: newTodoData, fetch: newTodo, error: newTodoError } = useFetch<{ newTodo: TodoItem }>("post")
+  const { data: editData, fetch: editFetch, error: editError } = useFetch<{ updatedTodo: TodoItem }>("post")
+  const { data: deleteData, fetch: deleteFetch, error: deleteError } = useFetch<{ deletedTodo: TodoItem }>("post")
+  const { data: feedData, fetch: getFeed } = useFetch<{ friendIdArr: string[], list: TodoItem[] }>("get")
 
   useEffect(() => {
-    if (newTodoData) console.log(newTodoData)
+    if (feedData && feedData.status === 200) {
+      if (newTodoData && newTodoData.status === 200) {
+        socket.emit("get_feed", { todo: newTodoData.data.newTodo, id: user._id, feedIds: feedData.data.friendIdArr, type: 'new' })
+      }
+
+      if (editData && editData.status === 200) {
+        socket.emit("get_feed", { todo: editData.data.updatedTodo, id: user._id, feedIds: feedData.data.friendIdArr, type: 'edit' })
+      }
+
+      if (deleteData && deleteData.status === 200) {
+        socket.emit("get_feed", { todo: deleteData.data.deletedTodo, id: user._id, feedIds: feedData.data.friendIdArr, type: 'delete' })
+      }
+    }
     if (newTodoError) console.log(newTodoError)
     if (editData) console.log(editData)
     if (editError) console.log(editError)
     if (deleteError) console.log(deleteError)
     if (deleteData) console.log(deleteData)
-  }, [newTodoData, newTodoError, editData, editError, deleteData, deleteError])
+    if (feedData) {
+      setTodoList(feedData.data.list)
+    }
+  }, [newTodoData, newTodoError, editData, editError, deleteData, deleteError, feedData])
 
   async function handleNewSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     await newTodo(globals.BE_ENDPOINTS.NEW_TODO, newTodoState)
-    socket.emit('get_feed', user._id)
     setNewTodoState({
       title: "",
       description: "",
@@ -42,14 +63,37 @@ export default function Feed({ socket }: { socket: any }) {
     })
   }
 
-  function feedUpdater(list: TodoItem[]) {
-    setTodoList(list)
+  async function feedUpdater({ type, todo }: { type: string, todo: TodoItem }) {
+    if (type === "new") {
+      setTodoList(state => [...state, todo])
+    }
+
+    if (type === "edit") {
+      setTodoList(state => {
+        return state.map(item => {
+          if (item._id === todo._id) {
+            return todo
+          } else {
+            return item
+
+          }
+        })
+      })
+    }
+
+    if (type === "delete") {
+      setTodoList(state => {
+        return state.filter(item => item._id !== todo._id)
+      })
+    }
   }
 
   useEffect(() => {
+    getFeed(globals.BE_ENDPOINTS.GET_FEED)
+
     socket.connect()
+    socket.emit('join_room', user._id)
     socket.on('feed_updated', feedUpdater)
-    socket.emit('get_feed', user._id)
 
     return () => {
       socket.off('feed_updated', feedUpdater)
@@ -61,14 +105,12 @@ export default function Feed({ socket }: { socket: any }) {
     e.preventDefault()
     if (isEditing) {
       await editFetch(globals.BE_ENDPOINTS.EDIT_TODO, isEditing)
-      socket.emit('get_feed', user._id)
       setIsEditing(null)
     }
   }
 
   async function handleDelete(item: TodoItem) {
     await deleteFetch(globals.BE_ENDPOINTS.DELETE_TODO, item)
-    socket.emit('get_feed', user._id)
   }
 
   return (
@@ -86,7 +128,7 @@ export default function Feed({ socket }: { socket: any }) {
           <button type="submit">submit</button>
         </form>
       </div>
-      {todoList && todoList.map((item, idx) => {
+      {todoList && todoList.sort((a, b) => Number(new Date(b.updatedAt)) - Number(new Date(a.updatedAt))).map((item, idx) => {
         return (
           <>
             <div key={idx} className="m-5 p-2 border-[1px] border-gray-500">
@@ -102,12 +144,18 @@ export default function Feed({ socket }: { socket: any }) {
                 </>
               ) : (
                 <>
-                  <h1 className="font-bold text-xl">{item.title}</h1>
-                  <h1>{item.description}</h1>
-                  <div>
-                    <button onClick={() => setIsEditing(item)}>edit</button>
-                  </div>
-                  <button onClick={() => handleDelete(item)}>Delete</button>
+                  <h1 className="font-bold text-2xl">@{item.createdByUser.username || 'none'}</h1>
+                  <p className="text-gray-500 italic">{item.createdByUser.email}</p>
+                  <h1 className="font-bold text-xl">title: {item.title}</h1>
+                  <h1>description: {item.description}</h1>
+                  {user._id === item.createdByUser._id && (
+                    <>
+                      <div>
+                        <button onClick={() => setIsEditing(item)}>edit</button>
+                      </div>
+                      <button onClick={() => handleDelete(item)}>Delete</button>
+                    </>
+                  )}
                 </>
               )}
             </div>

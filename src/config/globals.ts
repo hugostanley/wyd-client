@@ -11,7 +11,8 @@ export const globals = {
     ALL_FRIENDS: "/friends",
     FRIEND_REQUESTS: "/friend/requests", 
     INCOMING_REQUEST: "/friend/incoming",
-    ACCEPT_REQUEST: "/friend/accept"
+    ACCEPT_REQUEST: "/friend/accept",
+    GET_FEED: "/todo/feed"
   },
   FE_ENDPOINTS: {
     LOGIN: "/login",
