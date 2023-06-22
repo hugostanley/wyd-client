@@ -11,6 +11,7 @@ import Friends from './pages/Friends.tsx'
 import Register from './pages/Register.tsx'
 import Feed from './pages/Feed.tsx'
 import { io } from 'socket.io-client'
+import Landing from './pages/Landing.tsx'
 const socket = io(globals.BACKEND_BASE_URL)
 
 async function getIsLoggedIn() {
@@ -18,6 +19,10 @@ async function getIsLoggedIn() {
 }
 
 const router = createBrowserRouter([
+  {
+    path: "/landing",
+    element: <Landing />
+  },
   {
     path: globals.FE_ENDPOINTS.LOGIN,
     element: <Restrict component={<Login />} />,
