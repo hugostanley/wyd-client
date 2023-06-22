@@ -16,22 +16,25 @@ const socket = io(globals.BACKEND_BASE_URL)
 async function getIsLoggedIn() {
   return JSON.parse(localStorage.getItem("isLoggedIn") || "false")
 }
+
 const router = createBrowserRouter([
+  {
+    path: globals.FE_ENDPOINTS.LOGIN,
+    element: <Restrict component={<Login />} />,
+    loader: getIsLoggedIn
+  },
+  {
+    path: globals.FE_ENDPOINTS.REGISTER,
+    element: <Restrict component={<Register />} />,
+    loader: getIsLoggedIn
+  },
   {
     path: "/",
     element: <App />,
-    loader: getIsLoggedIn,
+    loader: async () => {
+      return JSON.parse(localStorage.getItem("isLoggedIn") || "false")
+    },
     children: [
-      {
-        path: globals.FE_ENDPOINTS.LOGIN,
-        element: <Restrict component={<Login />} />,
-        loader: getIsLoggedIn
-      },
-      {
-        path: globals.FE_ENDPOINTS.REGISTER,
-        element: <Restrict component={<Register />} />,
-        loader: getIsLoggedIn
-      },
       {
         index: true,
         element: <Authenticate component={<Feed socket={socket} />} />,
