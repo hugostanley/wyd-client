@@ -38,7 +38,6 @@ function Header() {
         <>
           <div className="flex gap-1 cursor-pointer" onClick={() => navigate("/")}>
             <Squirrel size={25} />
-            <p className="font-extrabold self-end">WYD</p>
           </div>
           <Users size={25} className="cursor-pointer" onClick={() => navigate(globals.FE_ENDPOINTS.FRIENDS)} />
         </>
