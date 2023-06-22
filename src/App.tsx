@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom"
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom"
 import { globals } from "./config/globals"
 import { Squirrel, UserPlus } from "lucide-react"
 import { Users } from "lucide-react"
@@ -26,7 +26,7 @@ function Header() {
     console.log(searchParams.pathname)
   }, [searchParams])
   return (
-    <div className="flex justify-between p-4">
+    <div className="flex justify-between p-4 sm:px-[6vw] md:px-[11vw] lg:px-[16vw] xl:px-[21vw]">
       {searchParams.pathname === globals.FE_ENDPOINTS.FRIENDS ? (
         <>
           <div className="flex gap-1 cursor-pointer" onClick={() => navigate("/")}>

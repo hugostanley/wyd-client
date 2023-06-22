@@ -39,9 +39,12 @@ export default function Login() {
   }, [loginData, loginError])
 
   return (
-    <div className="w-screen h-screen p-6 flex items-center">
-      <div className="h-[50%] flex flex-col gap-2 grow">
-        <h1 className="font-bold text-5xl ">Login</h1>
+    <div className="w-screen h-screen flex items-center ">
+      <div className="grow bg-[url('src/assets/bg.jpg')] bg-cover bg-center bg-no-repeat h-full w-[50%] hidden lg:block">
+
+      </div>
+      <div className="flex flex-col gap-2 grow px-[7vw] w-[50%]">
+        <h1 className="font-bold text-4xl ">Login</h1>
         <div>
           <form onSubmit={handleSubmit}>
             <Field className="flex flex-col gap-2">
@@ -54,7 +57,7 @@ export default function Login() {
             </Field>
             <button className="w-full bg-gray-900 text-white rounded-md mt-2 p-2 font-bold hover:bg-gray-800 border-none" type="submit">Login</button>
           </form>
-          <p className="text-sm mt-2">
+          <p className="text-xs mt-6">
             Don't have an account yet? <span className="text-indigo-500 underlined cursor-pointer" onClick={()=> navigate(globals.FE_ENDPOINTS.REGISTER)}>Register.</span>
           </p>
         </div>

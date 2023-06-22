@@ -135,7 +135,7 @@ export default function Feed({ socket }: { socket: any }) {
   }, [])
 
   return (
-    <div>
+    <div className="sm:px-[5vw] md:px-[10vw] lg:px-[15vw] xl:px-[20vw]">
       <div>
         <form onSubmit={handleNewSubmit} className="">
           <div className="p-3 flex gap-2">
