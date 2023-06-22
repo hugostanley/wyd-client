@@ -61,19 +61,19 @@ export default function Friends({ socket }: { socket: any }) {
   }, [allFriends])
 
   return (
-    <>
+    <div className="sm:px-[6vw] md:px-[11vw] lg:px-[16vw] xl:px-[21vw]">
       <div className="w-full flex flex-col items-center ">
         <div className="justify-self-center font-bold text-2xl">
           <h1>{user.username}</h1>
         </div>
         <div className="flex w-full justify-around">
-          <div className={`py-2 flex justify-center ${selectedTab === "friends" && "border-b-4 border-b-indigo-500"}`} onClick={() => setSelectedTab("friends")}>
+          <div className={`py-2 flex justify-center cursor-pointer ${selectedTab === "friends" && "border-b-4 border-b-indigo-500"}`} onClick={() => setSelectedTab("friends")}>
             <p>Friends</p>
           </div>
-          <div className={`py-2 flex justify-center ${selectedTab === "pending" && "border-b-4 border-b-indigo-500"}`} onClick={() => setSelectedTab("pending")}>
+          <div className={`py-2 flex justify-center cursor-pointer ${selectedTab === "pending" && "border-b-4 border-b-indigo-500"}`} onClick={() => setSelectedTab("pending")}>
             <p>Pending</p>
           </div>
-          <div className={`py-2 flex justify-center ${selectedTab === "requests" && "border-b-4 border-b-indigo-500"}`} onClick={() => setSelectedTab("requests")}>
+          <div className={`py-2 flex justify-center cursor-pointer ${selectedTab === "requests" && "border-b-4 border-b-indigo-500"}`} onClick={() => setSelectedTab("requests")}>
             <p>Requests</p>
           </div>
         </div>
@@ -171,6 +171,6 @@ export default function Friends({ socket }: { socket: any }) {
           })}
         </>
       )}
-    </>
+    </div>
   )
 }
