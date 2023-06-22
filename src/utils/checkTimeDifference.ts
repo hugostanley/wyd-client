@@ -6,6 +6,7 @@ export function checkTimeDifference(time: string) {
 
   // Calculate the difference in minutes
   const diff = currentDateTime.diff(pastDateTime, 'minutes').toObject();
+  // @ts-ignore
   const minutesPassed = Math.floor(diff.minutes);
 
   // Determine the appropriate time unit
