@@ -1,6 +1,8 @@
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, useEffect, useRef, useState } from "react"
 import { globals } from "../config/globals"
 import { useFetch } from "../hooks/useFetch"
+import { Dot, MoreHorizontal, UserCircle } from "lucide-react";
+import { checkTimeDifference } from "../utils/checkTimeDifference";
 
 interface TodoItem {
   _id: string;
@@ -17,6 +19,8 @@ interface TodoItem {
 
 export default function Feed({ socket }: { socket: any }) {
   const user = JSON.parse(localStorage.getItem('user') || '{}')
+  const [toolTip, setTooltip] = useState<null | number>(null)
+  const toolTipRef = useRef(null)
   const [todoList, setTodoList] = useState<TodoItem[]>([])
   const [isEditing, setIsEditing] = useState<TodoItem | null>(null)
   const [newTodoState, setNewTodoState] = useState({
@@ -111,57 +115,101 @@ export default function Feed({ socket }: { socket: any }) {
 
   async function handleDelete(item: TodoItem) {
     await deleteFetch(globals.BE_ENDPOINTS.DELETE_TODO, item)
+    setTooltip(null)
   }
+
+  function disableToolTip(e: MouseEvent) {
+
+    // @ts-ignore
+    if (e.target.id !== toolTipRef.current.id) {
+      setTooltip(null)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('click', disableToolTip)
+    return () => {
+      window.removeEventListener('click', disableToolTip)
+    }
+
+  }, [])
 
   return (
     <div>
       <div>
-        <form onSubmit={handleNewSubmit} className="p-2 m-5 border-2 border-gray-500">
-          <div className="flex">
-            <label htmlFor="title">Title</label>
-            <input value={newTodoState.title} onChange={e => setNewTodoState(state => ({ ...state, title: e.target.value }))} />
+        <form onSubmit={handleNewSubmit} className="">
+          <div className="p-3 flex gap-2">
+            <UserCircle className="text-gray-900" size={30} />
+            <div className="flex flex-col grow">
+              <input value={newTodoState.title} onChange={e => setNewTodoState(state => ({ ...state, title: e.target.value }))} className="outline-none text-lg font-semibold" placeholder="What are you doing?" />
+              <textarea value={newTodoState.description} onChange={e => setNewTodoState(state => ({ ...state, description: e.target.value }))} placeholder="Tell us more" className="text-md outline-none resize-none"></textarea>
+              <button className="self-end px-4 py-1 text-white font-semibold shadow-lg rounded-full bg-indigo-500" type="submit">Post</button>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="description">Description</label>
-            <textarea value={newTodoState.description} onChange={e => setNewTodoState(state => ({ ...state, description: e.target.value }))} />
-          </div>
-          <button type="submit">submit</button>
         </form>
       </div>
-      {todoList && todoList.sort((a, b) => Number(new Date(b.updatedAt)) - Number(new Date(a.updatedAt))).map((item, idx) => {
-        return (
-          <>
-            <div key={idx} className="m-5 p-2 border-[1px] border-gray-500">
-              {isEditing !== null && isEditing._id === item._id ? (
-                <>
-                  <form onSubmit={(e) => handleEditSubmit(e)} className="flex flex-col">
-                    {/* @ts-ignore */}
-                    <input value={isEditing.title} className="font-bold text-xl" onChange={e => setIsEditing(state => ({ ...state, title: e.target.value }))} />
-                    {/* @ts-ignore */}
-                    <textarea value={isEditing.description} onChange={(e) => setIsEditing(state => ({ ...state, description: e.target.value }))} />
-                    <button type="submit">update</button>
-                  </form>
-                </>
-              ) : (
-                <>
-                  <h1 className="font-bold text-2xl">@{item.createdByUser.username || 'none'}</h1>
-                  <p className="text-gray-500 italic">{item.createdByUser.email}</p>
-                  <h1 className="font-bold text-xl">title: {item.title}</h1>
-                  <h1>description: {item.description}</h1>
-                  {user._id === item.createdByUser._id && (
-                    <>
-                      <div>
-                        <button onClick={() => setIsEditing(item)}>edit</button>
+      <div className="flex flex-col">
+        {todoList && todoList.sort((a, b) => Number(new Date(b.updatedAt)) - Number(new Date(a.updatedAt))).map((item, idx) => {
+          return (
+            <>
+              <div key={idx} className="p-3 pb-5 border-t border-slate-300 shadow-sm">
+                {isEditing !== null && isEditing._id === item._id ? (
+                  <>
+                    <form onSubmit={(e) => handleEditSubmit(e)} className="flex flex-col">
+                      {/* @ts-ignore */}
+                      <input value={isEditing.title} className="font-bold text-xl" onChange={e => setIsEditing(state => ({ ...state, title: e.target.value }))} />
+                      {/* @ts-ignore */}
+                      <textarea value={isEditing.description} onChange={(e) => setIsEditing(state => ({ ...state, description: e.target.value }))} />
+                      <button type="submit">update</button>
+                    </form>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-between items-center relative">
+                      <div className="flex items-center gap-2">
+                        {user._id === item.createdByUser._id ? (
+                          <div className="bg-[url('src/assets/newremove.png')] bg-cover bg-center bg-no-repeat h-12 w-12 rounded-full border border-slate-300">
+                          </div>
+                        ) : (
+                          <div className="bg-[url('src/assets/810438.jpeg')] bg-cover bg-center bg-no-repeat h-12 w-12 rounded-full border border-slate-300">
+                          </div>
+                        )}
+                        <div className="">
+                          <p className="font-bold text-sm">{item.createdByUser.username}</p>
+                          <div className="flex items-center text-slate-400">
+                            <p className="text-xs">{item.createdByUser.email}</p>
+                            <Dot size={15} />
+                            <p className="text-xs">{checkTimeDifference(item.updatedAt)}</p>
+                          </div>
+                        </div>
                       </div>
-                      <button onClick={() => handleDelete(item)}>Delete</button>
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          </>
-        )
-      })}
-    </div>
+                      {user._id === item.createdByUser._id && (
+                        <div ref={toolTipRef} id="tooltipButton" className="cursor-pointer" onClick={() => setTooltip(idx)} >
+                          <MoreHorizontal size={15} className="pointer-events-none" />
+                        </div>
+                      )}
+                      {toolTip === idx && (
+                        <div className="absolute w-40 h-fit top-0 shadow-md bg-white right-0 rounded-md border border-slate-300 flex flex-col">
+                          <div onClick={() => setIsEditing(item)} className="px-2 cursor-pointer hover:bg-gray-100">
+                            <p>Edit</p>
+                          </div>
+                          <div onClick={() => handleDelete(item)} className="px-2 cursor-pointer hover:bg-gray-100">
+                            <p>Delete</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-2 leading-2">
+                      <h1 className="font-semibold text-lg">{item.title}</h1>
+                      <p className="text-sm text-gray-700 italic">{item.description}</p>
+                    </div>
+                  </>
+                )}
+              </div >
+            </>
+          )
+        })}
+      </div>
+    </div >
   )
 }
