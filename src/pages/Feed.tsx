@@ -168,10 +168,10 @@ export default function Feed({ socket }: { socket: any }) {
                     <div className="flex justify-between items-center relative">
                       <div className="flex items-center gap-2">
                         {user._id === item.createdByUser._id ? (
-                          <div className="bg-[url('src/assets/newremove.png')] bg-cover bg-center bg-no-repeat h-12 w-12 rounded-full border border-slate-300">
+                          <div className="bg-stan-avatar bg-cover bg-center bg-no-repeat h-12 w-12 rounded-full border border-slate-300">
                           </div>
                         ) : (
-                          <div className="bg-[url('src/assets/810438.jpeg')] bg-cover bg-center bg-no-repeat h-12 w-12 rounded-full border border-slate-300">
+                          <div className="bg-dan-avatar bg-cover bg-center bg-no-repeat h-12 w-12 rounded-full border border-slate-300">
                           </div>
                         )}
                         <div className="">

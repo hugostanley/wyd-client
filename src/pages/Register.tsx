@@ -30,7 +30,7 @@ export default function Register() {
 
   return (
     <div className="w-screen h-screen flex items-center ">
-      <div className="grow bg-[url('src/assets/bg.jpg')] bg-cover bg-center bg-no-repeat h-full w-[50%] hidden lg:block">
+      <div className="grow bg-auth-image bg-cover bg-center bg-no-repeat h-full w-[50%] hidden lg:block">
 
       </div>
       <div className="flex flex-col gap-2 grow px-[7vw] w-[50%]">

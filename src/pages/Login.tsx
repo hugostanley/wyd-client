@@ -32,7 +32,7 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify({ email: user.email, _id: user._id, username: user.username }))
       localStorage.setItem("secret_key", token)
       localStorage.setItem("isLoggedIn", "true")
-      navigate("/")
+      navigate("/app")
     }
     if (loginError) console.log(loginError)
 
@@ -40,7 +40,7 @@ export default function Login() {
 
   return (
     <div className="w-screen h-screen flex items-center ">
-      <div className="grow bg-[url('src/assets/bg.jpg')] bg-cover bg-center bg-no-repeat h-full w-[50%] hidden lg:block">
+      <div className="grow bg-auth-image bg-cover bg-center bg-no-repeat h-full w-[50%] hidden lg:block">
 
       </div>
       <div className="flex flex-col gap-2 grow px-[7vw] w-[50%]">
