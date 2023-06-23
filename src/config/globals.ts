@@ -15,9 +15,9 @@ export const globals = {
     GET_FEED: "/todo/feed"
   },
   FE_ENDPOINTS: {
-    LOGIN: "/login",
-    REGISTER: "/register",
-    FRIENDS: "/friends"
+    LOGIN: "login",
+    REGISTER: "register",
+    FRIENDS: "friends"
   },
   RESPONSE_MESSAGES: {
     AUTHENTICATION: ["Failed to authenticate", "Incorrect token given", "Authorization headers not found"]
