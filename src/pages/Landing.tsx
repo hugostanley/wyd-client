@@ -1,4 +1,4 @@
-import { Copyright, Menu, Squirrel, X } from "lucide-react";
+import { Menu, Squirrel, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { globals } from "../config/globals";
 import gif from '../assets/mobile.gif'
