@@ -20,7 +20,7 @@ async function getIsLoggedIn() {
 
 const router = createBrowserRouter([
   {
-    path: "/landing",
+    path: "/",
     element: <Landing />
   },
   {
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
     loader: getIsLoggedIn
   },
   {
-    path: "/",
+    path: "/app",
     element: <App />,
     loader: async () => {
       return JSON.parse(localStorage.getItem("isLoggedIn") || "false")

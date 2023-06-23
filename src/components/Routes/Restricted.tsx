@@ -9,7 +9,7 @@ export default function Restrict({ component }: AuthenticateProps) {
   const data = useLoaderData()
 
   if (data !== false) {
-    return <Navigate to={"/"} />
+    return <Navigate to={"/app"} />
   }
 
   return <>{component}</>
