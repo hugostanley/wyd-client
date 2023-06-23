@@ -15,8 +15,8 @@ export const globals = {
     GET_FEED: "/todo/feed"
   },
   FE_ENDPOINTS: {
-    LOGIN: "login",
-    REGISTER: "register",
+    LOGIN: "/login",
+    REGISTER: "/register",
     FRIENDS: "friends"
   },
   RESPONSE_MESSAGES: {
