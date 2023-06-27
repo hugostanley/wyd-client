@@ -5,3 +5,63 @@
 html {
   @apply text-gray-900
 }
+
+.hide-nav {
+  animation: HideNav 200ms forwards ease-in-out;
+}
+
+.show-nav {
+  animation: ShowNav 200ms forwards ease-in-out;
+}
+
+@keyframes ShowNav {
+  0% {
+    display: none;
+    bottom: -100px;
+  }
+
+  100% {
+    bottom: 0;
+    display: inherit;
+  }
+}
+
+@keyframes HideNav {
+  0% { bottom:0;}
+  100% { bottom: -100px; display: none; }
+}
+
+.show-new-todo-form {
+  animation: ShowNewTodoForm 200ms ease-in-out forwards;
+}
+
+@keyframes ShowNewTodoForm {
+  0% {
+    bottom: -100vh;
+  }
+
+  100% {
+    bottom:0;
+  }
+}
+
+.hide-todo-form {
+  animation: HideTodoForm 200ms ease-in-out forwards;
+}
+
+@keyframes HideTodoForm {
+0% {
+  bottom: 0;
+  opacity:1;
+}
+
+95% {
+  bottom: -100vh;
+}
+
+100% {
+  display: none;
+  opacity: 0;
+}
+
+}

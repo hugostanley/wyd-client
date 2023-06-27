@@ -35,7 +35,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/app",
-    element: <App />,
+    element: <App socket={socket} />,
     loader: async () => {
       return JSON.parse(localStorage.getItem("isLoggedIn") || "false")
     },
