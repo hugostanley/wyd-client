@@ -15,6 +15,8 @@ export const globals = {
     GET_FEED: "/todo/feed"
   },
   FE_ENDPOINTS: {
+    FEED: "/app",
+    PROFILE: "/profile",
     LOGIN: "/login",
     REGISTER: "/register",
     FRIENDS: "friends"

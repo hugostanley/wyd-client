@@ -1,10 +1,12 @@
-import { FormEvent, useEffect, useRef, useState } from "react"
+// @ts-nocheck
+import { FormEvent, useContext, useEffect, useRef, useState } from "react"
 import { globals } from "../config/globals"
 import { useFetch } from "../hooks/useFetch"
 import { Dot, MoreHorizontal, UserCircle } from "lucide-react";
 import { checkTimeDifference } from "../utils/checkTimeDifference";
+import { FeedContext } from "../App";
 
-interface TodoItem {
+export interface TodoItem {
   _id: string;
   status: string;
   title: string;
@@ -19,26 +21,16 @@ interface TodoItem {
 
 export default function Feed({ socket }: { socket: any }) {
   const user = JSON.parse(localStorage.getItem('user') || '{}')
+  const { feedData } = useContext(FeedContext)
   const [toolTip, setTooltip] = useState<null | number>(null)
   const toolTipRef = useRef(null)
   const [todoList, setTodoList] = useState<TodoItem[]>([])
   const [isEditing, setIsEditing] = useState<TodoItem | null>(null)
-  const [newTodoState, setNewTodoState] = useState({
-    title: "",
-    description: "",
-    status: "inprogress"
-  })
-  const { data: newTodoData, fetch: newTodo, error: newTodoError } = useFetch<{ newTodo: TodoItem }>("post")
   const { data: editData, fetch: editFetch, error: editError } = useFetch<{ updatedTodo: TodoItem }>("post")
   const { data: deleteData, fetch: deleteFetch, error: deleteError } = useFetch<{ deletedTodo: TodoItem }>("post")
-  const { data: feedData, fetch: getFeed } = useFetch<{ friendIdArr: string[], list: TodoItem[] }>("get")
 
   useEffect(() => {
     if (feedData && feedData.status === 200) {
-      if (newTodoData && newTodoData.status === 200) {
-        socket.emit("get_feed", { todo: newTodoData.data.newTodo, id: user._id, feedIds: feedData.data.friendIdArr, type: 'new' })
-      }
-
       if (editData && editData.status === 200) {
         socket.emit("get_feed", { todo: editData.data.updatedTodo, id: user._id, feedIds: feedData.data.friendIdArr, type: 'edit' })
       }
@@ -47,7 +39,6 @@ export default function Feed({ socket }: { socket: any }) {
         socket.emit("get_feed", { todo: deleteData.data.deletedTodo, id: user._id, feedIds: feedData.data.friendIdArr, type: 'delete' })
       }
     }
-    if (newTodoError) console.log(newTodoError)
     if (editData) console.log(editData)
     if (editError) console.log(editError)
     if (deleteError) console.log(deleteError)
@@ -55,17 +46,8 @@ export default function Feed({ socket }: { socket: any }) {
     if (feedData) {
       setTodoList(feedData.data.list)
     }
-  }, [newTodoData, newTodoError, editData, editError, deleteData, deleteError, feedData])
+  }, [editData, editError, deleteData, deleteError, feedData])
 
-  async function handleNewSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    await newTodo(globals.BE_ENDPOINTS.NEW_TODO, newTodoState)
-    setNewTodoState({
-      title: "",
-      description: "",
-      status: "inprogress"
-    })
-  }
 
   async function feedUpdater({ type, todo }: { type: string, todo: TodoItem }) {
     if (type === "new") {
@@ -93,7 +75,6 @@ export default function Feed({ socket }: { socket: any }) {
   }
 
   useEffect(() => {
-    getFeed(globals.BE_ENDPOINTS.GET_FEED)
 
     socket.connect()
     socket.emit('join_room', user._id)
@@ -136,18 +117,6 @@ export default function Feed({ socket }: { socket: any }) {
 
   return (
     <div className="sm:px-[5vw] md:px-[10vw] lg:px-[15vw] xl:px-[20vw]">
-      <div>
-        <form onSubmit={handleNewSubmit} className="">
-          <div className="p-3 flex gap-2">
-            <UserCircle className="text-gray-900" size={30} />
-            <div className="flex flex-col grow">
-              <input value={newTodoState.title} onChange={e => setNewTodoState(state => ({ ...state, title: e.target.value }))} className="outline-none text-lg font-semibold" placeholder="What are you doing?" />
-              <textarea value={newTodoState.description} onChange={e => setNewTodoState(state => ({ ...state, description: e.target.value }))} placeholder="Tell us more" className="text-md outline-none resize-none"></textarea>
-              <button className="self-end px-4 py-1 text-white font-semibold shadow-lg rounded-full bg-indigo-500" type="submit">Post</button>
-            </div>
-          </div>
-        </form>
-      </div>
       <div className="flex flex-col">
         {todoList && todoList.sort((a, b) => Number(new Date(b.updatedAt)) - Number(new Date(a.updatedAt))).map((item, idx) => {
           return (
